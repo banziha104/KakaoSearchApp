@@ -1,7 +1,8 @@
-package com.lyj.kakaosearchapp
+package com.lyj.kakaosearchapp.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.lyj.kakaosearchapp.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
