@@ -1,6 +1,9 @@
 package com.lyj.kakaosearchapp.data.source.remote.entity
 
 import com.google.gson.annotations.SerializedName
+import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
+import java.time.LocalDateTime
+import java.util.*
 
 class KakaoVClipResponse {
 	data class Response(
@@ -25,12 +28,11 @@ class KakaoVClipResponse {
 	)
 
 	data class DocumentsItem(
-
 		@field:SerializedName("datetime")
 		val datetime: String? = null,
 
 		@field:SerializedName("thumbnail")
-		val thumbnail: String? = null,
+		override val thumbnail: String? = null,
 
 		@field:SerializedName("author")
 		val author: String? = null,
@@ -43,5 +45,8 @@ class KakaoVClipResponse {
 
 		@field:SerializedName("play_time")
 		val playTime: Int? = null
-	)
+	) : KakaoVClipModel{
+		override var date: Date? = null
+		override var epochTimes: Long? = null
+	}
 }

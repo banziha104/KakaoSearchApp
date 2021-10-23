@@ -1,6 +1,9 @@
 package com.lyj.kakaosearchapp.data.source.remote.entity
 
 import com.google.gson.annotations.SerializedName
+import com.lyj.kakaosearchapp.domain.model.KakaoImageModel
+import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
+import java.util.*
 
 class KakaoImageResponse {
 	data class Response(
@@ -48,5 +51,10 @@ class KakaoImageResponse {
 
 		@field:SerializedName("height")
 		val height: Int? = null
-	)
+	) : KakaoImageModel{
+		override val thumbnail: String?
+			get() = thumbnailUrl
+		override var date: Date? = null
+		override var epochTimes: Long? = null
+	}
 }
