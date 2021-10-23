@@ -2,8 +2,14 @@
     <string name="app_name">KakaoSearchApp</string>
 
     <!--    Main Activity-->
+    <string name="main_tab_item_search">검색</string>
+    <string name="main_tab_item_store">저장됨</string>
     <string name="main_input_hint">검색어를 입력해주세요.</string>
     <string name="main_empty_result">조회된 유저가 없습니다.</string>
     <string name="main_user_name_is_not_invalid">잘못된 유저이름입니다.</string>
     <string name="main_search_button_text">검색</string>
+
+    <!--    Network-->
+    <string name="network_not_reachable">"네트워크가 가용하지 않습니다. 네트워크 상태를 확인해주세요"</string>
+
 </resources>
