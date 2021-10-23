@@ -6,6 +6,9 @@ plugins {
     id 'org.jetbrains.dokka'
 }
 
+def properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 31
 
@@ -15,6 +18,8 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "KAKAO_API_KEY", properties['kakao.api.key']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,6 +51,7 @@ android {
         enableTransformForLocalTests = true
     }
 }
+
 
 dependencies {
     // Language
@@ -118,7 +124,7 @@ dependencies {
     testImplementation "androidx.paging:paging-common-ktx:$pagingVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-
+    testImplementation "androidx.fragment:fragment-testing:$fragmentTestVersion"
 
     kaptTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"

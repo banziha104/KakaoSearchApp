@@ -7,6 +7,7 @@ ext {
     legacySerportVersion = '1.0.0'
     swipeRefreshlayoutVersion = '1.1.0'
     viewPagerVersion = '1.0.0'
+
     // Language
     kotlinVersion = "1.5.21"
     kotlinXVersion = '0.9.1'
@@ -79,6 +80,7 @@ ext {
     mockitoInlineVersion ='2.21.0'
     mockitoKotlinVersion = '3.2.0'
     junitVersion = '4.13'
+    fragmentTestVersion = '1.3.6'
     androidxJunitVersion = '1.1.3'
     espressVersion = '3.4.0'
     androidTestRuleVersion='1.1.0'
