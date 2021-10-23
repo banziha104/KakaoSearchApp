@@ -6,7 +6,7 @@ ext {
     constraintLayoutVersion = '2.0.4'
     legacySerportVersion = '1.0.0'
     swipeRefreshlayoutVersion = '1.1.0'
-
+    viewPagerVersion = '1.0.0'
     // Language
     kotlinVersion = "1.5.21"
     kotlinXVersion = '0.9.1'
