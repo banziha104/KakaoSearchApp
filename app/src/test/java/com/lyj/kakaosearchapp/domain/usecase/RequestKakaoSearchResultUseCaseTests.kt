@@ -1,11 +1,11 @@
 package com.lyj.kakaosearchapp.domain.usecase
 
 import com.lyj.kakaosearchapp.config.TestConfig
+import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.extension.testWithAwait
+import com.lyj.kakaosearchapp.module.ApiModule
 import com.lyj.kakaosearchapp.module.ApiTestModule
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,8 +18,9 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
+@UninstallModules(ApiModule::class)
 @Config(application = HiltTestApplication::class, sdk = [TestConfig.SDK_VERSION])
-class RequestKakaoSearchResultUseCaseTestsTests : ApiTestModule(){
+class RequestKakaoSearchResultUseCaseTestsTests : ApiTestModule() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -27,20 +28,25 @@ class RequestKakaoSearchResultUseCaseTestsTests : ApiTestModule(){
     @Inject
     lateinit var useCase: RequestKakaoSearchResultUseCase
 
+    @BindValue
+    val kakaoApi: KakaoSearchApi = bindKakaoSearchApi()
+
     @Before
     fun init() {
         hiltRule.inject()
     }
 
     @Test
-    fun `실행테스트`(){
+    fun `실행테스트`() {
         useCase
             .execute(TestConfig.SEARCH_KEYWORD)
             .testWithAwait()
             .assertNoErrors()
             .assertComplete()
-            .assertValue {
-                it.isNotEmpty() && it.size == 6
+            .assertValue { list ->
+                list.isNotEmpty() && list.size == 6 &&
+                        list.mapNotNull { it.epochTimes }
+                            .zipWithNext { a, b -> a <= b }.all { it }
             }
     }
 }
