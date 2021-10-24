@@ -12,11 +12,11 @@ class KakaoApiRepositoryImpl(
 ) : KakaoApiRepository {
     override fun requestVClipSeachApi(
         query: String,
-        sort: KakaoSearchApi.Sort,
         page: Int,
-        size: Int
+        size: Int,
+        sort: KakaoSearchApi.Sort
     ): Single<List<KakaoVClipModel>> =
-        api.requestVClipSearch(query, sort, page, size).map { response ->
+        api.requestVClipSearch(query, page, size, sort).map { response ->
             response.documents?.filterNotNull()?.map { item ->
                 val (epoch, date) = DateUtils.parse(item.datetime)
                 item.epochTimes = epoch
@@ -27,11 +27,11 @@ class KakaoApiRepositoryImpl(
 
     override fun requestImageSearchApi(
         query: String,
-        sort: KakaoSearchApi.Sort,
         page: Int,
-        size: Int
+        size: Int,
+        sort: KakaoSearchApi.Sort
     ): Single<List<KakaoImageModel>> =
-        api.requestImageSearch(query, sort, page, size).map { response ->
+        api.requestImageSearch(query, page, size, sort).map { response ->
             response.documents?.filterNotNull()?.map { item ->
                 val (epoch, date) = DateUtils.parse(item.datetime)
                 item.epochTimes = epoch

@@ -11,21 +11,24 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface KakaoSearchApi {
-
+    companion object {
+        const val DEFAULT_PAGE = 1
+        const val DEFAULT_SIZE = 9
+    }
     @GET("v2/search/vclip")
     fun requestVClipSearch(
         @Query("query") query: String,
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
         @Query("sort") sort: Sort = Sort.RECENCY,
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 10
     ): Single<KakaoVClipResponse.Response>
 
     @GET("v2/search/image")
     fun requestImageSearch(
         @Query("query") query: String,
-        @Query("sort") sort: Sort = Sort.RECENCY,
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 10
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
+        @Query("sort") sort: Sort = Sort.RECENCY
     ): Single<KakaoImageResponse.Response>
 
 
