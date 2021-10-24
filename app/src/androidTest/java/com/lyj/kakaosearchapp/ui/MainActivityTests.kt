@@ -61,6 +61,8 @@ class MainActivityTests : MainActivityBaseTests(){
      * 9. 첫 번쨰 아이템 클릭 후 저장소에서 삭제
      * 10. 아이템이 비어있는지 확인
      * 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
+     * 12. 하단으로 이동해 무한 스크롤 확인
+     * 13. 상단으로 이동해 Refresh 되는지 확인
      */
     @Test
     fun `메인_시나리오_테스트`(){
@@ -149,15 +151,18 @@ class MainActivityTests : MainActivityBaseTests(){
         // 9. 첫 번쨰 아이템 클릭 후 저장소에서 삭제
         storeRecyclerViewInteraction
             .perform(CustomRecyclerViewAction.clickChildViewWithId(0, R.id.thumbnailItemImgContents))
-            .check(matches(CustomRecyclerViewMatcher.withDataEmpty())) // 9. 아이템이 비어있는지 확인
+            .check(matches(CustomRecyclerViewMatcher.withDataEmpty())) // 10. 아이템이 비어있는지 확인
 
 
         await(1000)
 
-        // 10. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
+        // 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
         tabLayoutInteraction
             .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.SEARCH.ordinal))
 
+//        * 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
+//        * 12. 하단으로 이동해 무한 스크롤 확인
+//        * 13. 상단으로 이동해 Refresh 되는지 확인
         searchRecyclerViewInteraction
             .check(
                 matches(
@@ -169,5 +174,40 @@ class MainActivityTests : MainActivityBaseTests(){
                         )
                 )
             )
+
+
+
+        // 12. 하단으로 이동해 무한 스크롤 확인
+        // 12-1 현재 아이템 갯수 확인
+        var latestItemCount = 0
+        searchRecyclerViewInteraction.check(matches(CustomRecyclerViewMatcher.withDataAssertion { currentItemCount ->
+            latestItemCount = currentItemCount
+            true
+        }))
+
+        searchRecyclerViewInteraction
+            .perform(CustomRecyclerViewAction.scrollToEnd())
+
+        await(1000)
+
+        searchRecyclerViewInteraction
+            .check(matches(CustomRecyclerViewMatcher.withDataAssertion { adapterItemCount ->
+                val isAdapterItemCountBiggerThanLatest = latestItemCount != 0 && adapterItemCount > latestItemCount
+                latestItemCount = adapterItemCount
+                isAdapterItemCountBiggerThanLatest
+            }))
+
+
+        // 13. 상단으로 이동해 Refresh 되는지 확인
+        searchRecyclerViewInteraction
+            .perform(CustomRecyclerViewAction.scrollToStart())
+            .perform(ViewActions.swipeDown())
+
+        await(1000)
+
+        searchRecyclerViewInteraction
+            .check(matches(CustomRecyclerViewMatcher.withDataAssertion { adapterItemCount ->
+                adapterItemCount < latestItemCount
+            }))
     }
 }
