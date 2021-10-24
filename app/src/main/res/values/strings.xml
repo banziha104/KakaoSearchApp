@@ -12,4 +12,7 @@
     <!--    Network-->
     <string name="network_not_reachable">"네트워크가 가용하지 않습니다. 네트워크 상태를 확인해주세요"</string>
 
+    <!--    Exception-->
+    <string name="exception_url_is_null">URL이 올바르지 않아, 데이터를 저장 혹은 삭제하는 데 실패하였습니다</string>
+    <string name="exception_undeclared">예기치 않은 에러가 발생하였습니다</string>
 </resources>
