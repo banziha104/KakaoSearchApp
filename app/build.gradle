@@ -21,7 +21,7 @@ android {
 
         buildConfigField "String", "KAKAO_API_KEY", properties['kakao.api.key']
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.lyj.kakaosearchapp.CustomUiTestRunner"
     }
 
     buildTypes {

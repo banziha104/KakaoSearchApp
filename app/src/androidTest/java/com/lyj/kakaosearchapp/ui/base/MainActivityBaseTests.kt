@@ -37,6 +37,6 @@ open class MainActivityBaseTests : BaseUiTests(){
     }
 
     internal val storeLayoutInteraction : ViewInteraction by lazy{
-        onView(withId(R.id.searchFrameLayout))
+        onView(withId(R.id.storeFrameLayout))
     }
 }

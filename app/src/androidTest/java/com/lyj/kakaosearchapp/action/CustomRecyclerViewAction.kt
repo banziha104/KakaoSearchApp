@@ -14,7 +14,10 @@ object CustomRecyclerViewAction {
     fun clickChildViewWithId(position : Int, id: Int): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View>? {
-                return null
+                return CoreMatchers.allOf<View>(
+                    ViewMatchers.isAssignableFrom(RecyclerView::class.java),
+                    ViewMatchers.isDisplayed()
+                )
             }
 
             override fun getDescription(): String {
