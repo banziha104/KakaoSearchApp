@@ -1,6 +1,7 @@
 package com.lyj.kakaosearchapp.data.source.remote.entity
 
 import com.google.gson.annotations.SerializedName
+import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
 import java.time.LocalDateTime
 import java.util.*
@@ -41,7 +42,7 @@ class KakaoVClipResponse {
 		val title: String? = null,
 
 		@field:SerializedName("url")
-		val url: String? = null,
+		override val siteUrl: String? = null,
 
 		@field:SerializedName("play_time")
 		val playTime: Int? = null
