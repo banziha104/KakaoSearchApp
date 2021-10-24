@@ -21,7 +21,8 @@ open class ApiTestModule {
                     (0..2).map {
                         KakaoVClipResponse.DocumentsItem(
                             "2021-09-${(0..30).random()}T20:30:05.000+09:00",
-                            thumbnail = "thumnail${it}"
+                            thumbnail = "thumnail${it}",
+                            siteUrl = "siteUrl${it}"
                         )
                     },
                     KakaoVClipResponse.Meta(
@@ -37,7 +38,8 @@ open class ApiTestModule {
                     (0..2).map {
                         KakaoImageResponse.DocumentsItem(
                             datetime = "2021-09-${(0..30).random()}T20:30:05.000+09:00",
-                            thumbnailUrl = "thumnailUrl${it}"
+                            thumbnailUrl = "thumnailUrl${it}",
+                            docUrl = "docUrl${it}"
                         )
                     },
                     KakaoImageResponse.Meta(
