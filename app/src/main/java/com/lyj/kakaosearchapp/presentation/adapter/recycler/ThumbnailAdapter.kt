@@ -71,6 +71,8 @@ class ThumbnailAdapter(
                 .with(itemView)
                 .let { requestManager ->
 
+                    val checkDrawble = if (item.isStored.isNotNullAndTrue()) R.drawable.ic_check else R.drawable.ic_uncheck
+
                     if (binding.thumbnailItemImgContents.tag != item.thumbnail) {
                         requestManager
                             .load(item.thumbnail)
@@ -78,9 +80,12 @@ class ThumbnailAdapter(
                                 tag = item.thumbnail
                             })
                     }
+
                     requestManager
-                        .load(if (item.isStored.isNotNullAndTrue()) R.drawable.ic_check else R.drawable.ic_uncheck)
-                        .into(binding.thumbnailItemImgIsStored)
+                        .load(checkDrawble)
+                        .into(binding.thumbnailItemImgIsStored.apply {
+                            tag = checkDrawble
+                        })
                 }
 
         }
