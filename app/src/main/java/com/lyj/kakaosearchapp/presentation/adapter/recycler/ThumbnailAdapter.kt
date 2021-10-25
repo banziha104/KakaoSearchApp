@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 
 class ThumbnailAdapter(
-    private val dataObserver: Flowable<List<KakaoSearchListModel>>,
+    private val dataObserver: Flowable<ThumbnailItemEvent>,
     private val onClicked: (KakaoSearchModel) -> Unit
 ) : RecyclerView.Adapter<ThumbnailAdapter.ThumbnailViewHolder>() {
 
@@ -27,7 +27,11 @@ class ThumbnailAdapter(
     init {
         dataObserver
             .observeOn(Schedulers.computation())
-            .map { newItems ->
+            .map { event ->
+                val newItems = when(event){
+                    is ThumbnailItemEvent.Add -> latestData + event.item
+                    is ThumbnailItemEvent.Refesh -> event.item
+                }
                 val diffUtils = KakaoModelDiffUtils(latestData, newItems)
                 DiffUtil.calculateDiff(diffUtils) to newItems
             }
@@ -90,6 +94,12 @@ class ThumbnailAdapter(
 
         }
     }
+}
+
+sealed interface ThumbnailItemEvent{
+    val item : List<KakaoSearchListModel>
+    class Add(override val item: List<KakaoSearchListModel>) : ThumbnailItemEvent
+    class Refesh(override val item: List<KakaoSearchListModel>) : ThumbnailItemEvent
 }
 
 class KakaoModelDiffUtils(
