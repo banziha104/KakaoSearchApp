@@ -6,6 +6,9 @@ import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
 import java.util.*
 
+/**
+ * 카카오 이미지 검색의 응답 객체
+ */
 class KakaoImageResponse {
     data class Response(
         @field:SerializedName("documents")
@@ -60,6 +63,6 @@ class KakaoImageResponse {
             get() = docUrl
 
         override var date: Date? = null
-        override var epochTimes: Long? = null
+        override var epochMillSeconds: Long? = null
     }
 }

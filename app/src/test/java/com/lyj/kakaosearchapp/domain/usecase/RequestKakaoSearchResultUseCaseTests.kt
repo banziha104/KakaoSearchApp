@@ -12,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -45,7 +44,7 @@ class RequestKakaoSearchResultUseCaseTestsTests : ApiTestModule() {
             .assertComplete()
             .assertValue { list ->
                 list.isNotEmpty() && list.size == 6 &&
-                        list.mapNotNull { it.epochTimes }
+                        list.mapNotNull { it.epochMillSeconds }
                             .zipWithNext { a, b -> a <= b }.all { it }
             }
     }

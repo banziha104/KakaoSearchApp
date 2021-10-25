@@ -13,6 +13,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoreViewModel @Inject constructor() : ViewModel() {
+
+    /**
+     * MainViewModel의 latestLiveData를 viewModel로 관리하는 객체
+     */
     fun mapToKakaoSearchListModel(
         publisher: Publisher<MutableMap<String, KakaoSearchModel>>,
         lifecycleController: RxLifecycleController

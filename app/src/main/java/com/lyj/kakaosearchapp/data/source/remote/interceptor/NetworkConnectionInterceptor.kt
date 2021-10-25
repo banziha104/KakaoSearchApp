@@ -25,6 +25,9 @@ class NetworkConnectionInterceptor(
         return chain.proceed( chain.request().newBuilder().build())
     }
 
+    /**
+     * 요청시 현재 Network 가용 여부 판단
+     */
     private val isConnected: Boolean
         get() {
             val connectivityManager =
@@ -43,6 +46,9 @@ class NetworkConnectionInterceptor(
             }
         }
 
+    /**
+     * 요청시 네트워크 가용상태를 판단하고 이를 파라미터로 전달
+     */
     @JvmInline
     value class OnCheckNetworkConnection(val callBack : (isConnected: Boolean) -> Unit)
 }

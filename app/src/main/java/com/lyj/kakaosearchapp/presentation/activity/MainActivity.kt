@@ -15,11 +15,10 @@ import com.lyj.kakaosearchapp.databinding.ActivityMainBinding
 import com.lyj.kakaosearchapp.presentation.adapter.viewpager.MainViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.kotlin.merge
-import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), StoredDataControlErrorHandler, RxLifecycleController,
+class MainActivity : AppCompatActivity(), RxLifecycleController,
     ProgressBarController {
 
     override val rxLifecycleObserver: RxLifecycleObserver = RxLifecycleObserver(this)
@@ -38,13 +37,22 @@ class MainActivity : AppCompatActivity(), StoredDataControlErrorHandler, RxLifec
     }
 
     private fun initView() {
-        initPagerAndTablayout()
+        initPagerAndTabLayout()
     }
 
     private fun observeRxSource() {
         observeClickEvent()
     }
 
+    /**
+     * MainActivity 에서 검색과 관련된 Event를 처리
+     *
+     * 아래 두가지를 [merge]를 통해 결합
+     * 1. 검색 버튼 클릭
+     * 2. Soft Keyboard 에서 Action Button 클릭
+     *
+     * @see searchButtonActionObserver
+     */
     private fun observeClickEvent() {
         listOf(
             binding
@@ -74,20 +82,27 @@ class MainActivity : AppCompatActivity(), StoredDataControlErrorHandler, RxLifec
             })
     }
 
-    private fun initPagerAndTablayout() {
+    /**
+     * ViewPager와 TabLayout을 결합
+     *
+     * @see MainTabType
+     */
+    private fun initPagerAndTabLayout() {
         binding.mainViewPager.adapter = MainViewPagerAdapter(supportFragmentManager, lifecycle)
         TabLayoutMediator(binding.mainTabLayout, binding.mainViewPager) { tab, position ->
-            val tabType = MainTabsType.indexOf(position)
+            val tabType = MainTabType[position]
             if (tabType != null) {
                 tab.text = getString(tabType.titleRes)
             }
         }.attach()
     }
 
-    override fun onError(throwable: Throwable) {
-        longToast(if (throwable is NullPointerException) R.string.exception_url_is_null else R.string.exception_undeclared)
-    }
-
+    /**
+     * 종속된 Fragment 에서 MainActivity의 ProgressBar의
+     * Visibility를 관리할 수 있도록 구현
+     *
+     * @see [ProgressBarController]
+     */
     override fun setProgressBarVisibility(visibility: Int){
         binding.mainProgressBar.visibility = visibility
     }
@@ -95,8 +110,4 @@ class MainActivity : AppCompatActivity(), StoredDataControlErrorHandler, RxLifec
 
 interface ProgressBarController {
     fun setProgressBarVisibility(visibility: Int)
-}
-
-interface StoredDataControlErrorHandler {
-    fun onError(throwable: Throwable)
 }

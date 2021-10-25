@@ -11,6 +11,14 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
+/**
+ * Kakao Api Service 관련 생성자
+ *
+ * @param context
+ * @param callAdapter CallAdapter.Factory
+ * @param converter Converter.Factory
+ * @param callBack API 요청시 네트워크 상태에 대한 콜백
+ */
 class KakaoApiGenerator(
     private val context : Context,
     private val callAdapter: CallAdapter.Factory,

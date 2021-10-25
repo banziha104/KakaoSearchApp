@@ -6,6 +6,9 @@ import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 카카오 동영상 검색의 응답 객체
+ */
 class KakaoVClipResponse {
 	data class Response(
 
@@ -48,6 +51,6 @@ class KakaoVClipResponse {
 		val playTime: Int? = null
 	) : KakaoVClipModel{
 		override var date: Date? = null
-		override var epochTimes: Long? = null
+		override var epochMillSeconds: Long? = null
 	}
 }

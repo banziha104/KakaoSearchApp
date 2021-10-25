@@ -20,7 +20,7 @@ interface PublisherMock {
             val (mockEpoch, mockDate) = DateUtils.parse("2021-09-30T20:30:05.000+09:00")
             on { thumbnail } doReturn "thumbnail"
             on { date } doReturn mockDate
-            on { epochTimes } doReturn mockEpoch
+            on { epochMillSeconds } doReturn mockEpoch
             on { siteUrl } doReturn "siteUrl"
         }
     }

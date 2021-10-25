@@ -4,6 +4,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import io.reactivex.rxjava3.core.Observable
 
+/**
+ * Soft Keyboard 의 ActionButton Click 관찰
+ */
 fun EditText.searchButtonActionObserver(): Observable<Unit> =
     Observable.create<Unit> { emiiter ->
         setOnEditorActionListener { textView, actionId, keyEvent ->

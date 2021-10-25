@@ -14,7 +14,6 @@ import com.lyj.kakaosearchapp.common.rx.RxLifecycleObserver
 import com.lyj.kakaosearchapp.databinding.StoreFragmentBinding
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
-import com.lyj.kakaosearchapp.presentation.activity.StoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
 import io.reactivex.rxjava3.core.Flowable
 
@@ -34,6 +33,9 @@ class StoreFragment : Fragment(), RxLifecycleController {
     private val viewModel: StoreViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
 
+    /**
+     * MainViewModel의 저장 데이터 변경을 감지
+     */
     private val dataChangeObserver: Flowable<List<KakaoSearchListModel>> by lazy {
         viewModel.mapToKakaoSearchListModel(
             activityViewModel
@@ -48,9 +50,7 @@ class StoreFragment : Fragment(), RxLifecycleController {
     }
 
     private val storedThumbnailAdapter: ThumbnailAdapter by lazy {
-        val handler = (activity as? StoredDataControlErrorHandler) ?: throw NotImplementedError()
-        val onClicked = activityViewModel.insertOrDeleteIfExists(handler::onError)
-        ThumbnailAdapter(dataChangeObserver, onClicked)
+        ThumbnailAdapter(dataChangeObserver, activityViewModel::insertOrDeleteIfExists)
     }
 
     override fun onCreateView(

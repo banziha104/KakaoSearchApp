@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
 /**
- * Swipe Refresh 를 감지하는 옵저버
+ * SwipeRefreshLayout 의 Refresh Event를 관찰
  */
 fun SwipeRefreshLayout.refreshObserver(): Observable<Unit> =
     Observable.create<Unit> {

@@ -22,7 +22,6 @@ import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.databinding.SearchFragmentBinding
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
-import com.lyj.kakaosearchapp.presentation.activity.StoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.activity.ProgressBarController
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,10 +47,19 @@ class SearchFragment : Fragment(), RxLifecycleController {
 
     private val viewModel: SearchViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
+
+    /**
+     * MainActivity의 ProgressBar의 Visibility 관리
+     *
+     * @see ProgressBarController
+     */
     private val progressBarController: ProgressBarController? by lazy {
         activity as? ProgressBarController
     }
 
+    /**
+     * MainViewModel의 검색어 변경을 관찰
+     */
     private val searchKeywordChangeObserver: Flowable<String> by lazy {
         viewModel
             .mapToEditTextObserverByPublisher(
@@ -62,6 +70,9 @@ class SearchFragment : Fragment(), RxLifecycleController {
             )
     }
 
+    /**
+     * MainViewModel 저장된 데이터를 관찰
+     */
     private val storedDataChangeObserver: Flowable<MutableMap<String, KakaoSearchModel>> by lazy {
         viewModel
             .mapToStoredDataObserverByPublisher(
@@ -72,10 +83,15 @@ class SearchFragment : Fragment(), RxLifecycleController {
             )
     }
 
+    /**
+     * SwipeRefreshLayout 동작 감지
+     *
+     * @see refreshObserver
+     */
     private val swipeRefreshObserver by lazy {
         binding.serachSwipeRefreshLayout.refreshObserver()
             .filter {
-                (searchThumbnailAdapter.itemCount > 0).apply {
+                (searchThumbnailAdapter.itemCount > 0).apply { // 아이템이 비어있을 땐 갱신하지 않음
                     if (!this) {
                         binding.serachSwipeRefreshLayout.isRefreshing = false
                     }
@@ -83,20 +99,27 @@ class SearchFragment : Fragment(), RxLifecycleController {
             }
             .toFlowable(BackpressureStrategy.LATEST)
     }
+
+    /**
+     * 데이터의 영향을 주는 Ui Event를 관찰
+     *
+     * @see SearchFragmentUiEventType
+     * @return Ui Event 타입과 요청한 데이터를 Pair 객체로 반환
+     */
     private val uiEventToRequestObserver: Flowable<Pair<SearchFragmentUiEventType, List<KakaoSearchModel>>> by lazy {
         Flowable
             .merge<SearchFragmentUiEventType>(
-                searchKeywordChangeObserver
+                searchKeywordChangeObserver // 검색어 변경 감지, 호출시 page를 초기화
                     .map {
                         viewModel.page = KakaoSearchApi.DEFAULT_PAGE
                         SearchFragmentUiEventType.Search(it)
                     },
-                binding.searchRecyclerView.observeEndScrollEvents(this)
+                binding.searchRecyclerView.observeEndScrollEvents(this) // EndScroll 감지 , 호출시 page를 1 증가
                     .map {
                         viewModel.page++
                         SearchFragmentUiEventType.EndScroll(viewModel.page)
                     },
-                swipeRefreshObserver
+                swipeRefreshObserver // Refresh 감지 ,호출시 page를 초기화
                     .map {
                         viewModel.page = KakaoSearchApi.DEFAULT_PAGE
                         SearchFragmentUiEventType.Refresh
@@ -104,24 +127,28 @@ class SearchFragment : Fragment(), RxLifecycleController {
             )
             .filter {
                 activityViewModel.latestSearchKeyword.value.isNotBlank().apply {
-                    if(!this) requireContext().longToast(R.string.main_empty_result)
+                    if (!this) requireContext().longToast(R.string.main_empty_result)
                 }
             }
             .flatMapSingle { event ->
-                when (event) {
-                    is SearchFragmentUiEventType.EndScroll -> viewModel.requestKakaoSearchResult(
-                        activityViewModel.latestSearchKeyword.value,
-                        event.page
-                    )
-                    is SearchFragmentUiEventType.Search -> viewModel.requestKakaoSearchResult(event.searchKeyword)
-                    SearchFragmentUiEventType.Refresh -> viewModel
-                        .requestKakaoSearchResult(activityViewModel.latestSearchKeyword.value)
-                        .doOnSubscribe { binding.serachSwipeRefreshLayout.isRefreshing = false }
-                }
+                viewModel.requestKakaoSearchResult(
+                    if (event is SearchFragmentUiEventType.Search){ // Search Event 시 새로운 검색어, 나머지는 기존 검색어
+                        event.searchKeyword
+                    } else {
+                        activityViewModel.latestSearchKeyword.value
+                    },
+                    if (event is SearchFragmentUiEventType.EndScroll) event.page else viewModel.page // Scroll Event 시 증가된 page, 나머지는 초기화된 page
+                )
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { progressBarController?.setProgressBarVisibility(View.VISIBLE) }
-                    .doOnSuccess { progressBarController?.setProgressBarVisibility(View.GONE) }
-                    .doOnError { progressBarController?.setProgressBarVisibility(View.GONE) }
+                    .doOnSuccess {
+                        binding.serachSwipeRefreshLayout.isRefreshing = false
+                        progressBarController?.setProgressBarVisibility(View.GONE)
+                    }
+                    .doOnError {
+                        binding.serachSwipeRefreshLayout.isRefreshing = false
+                        progressBarController?.setProgressBarVisibility(View.GONE)
+                    }
                     .map { event to it }
             }
             .disposeByOnDestory(this)
@@ -129,8 +156,6 @@ class SearchFragment : Fragment(), RxLifecycleController {
     }
 
     private val searchThumbnailAdapter: ThumbnailAdapter by lazy {
-        val handler = (activity as? StoredDataControlErrorHandler) ?: throw NotImplementedError()
-        val onClicked = activityViewModel.insertOrDeleteIfExists(handler::onError)
         val dataFlow = viewModel.mapToKakaoSearchList(
             remoteDataObserver = uiEventToRequestObserver,
             storedDataObserver = storedDataChangeObserver,
@@ -140,7 +165,7 @@ class SearchFragment : Fragment(), RxLifecycleController {
                 requireContext().longToast(R.string.search_fragment_remote_date_empty)
             }
         }
-        ThumbnailAdapter(dataFlow, onClicked)
+        ThumbnailAdapter(dataFlow, activityViewModel::insertOrDeleteIfExists)
     }
 
     override fun onCreateView(
@@ -167,9 +192,27 @@ class SearchFragment : Fragment(), RxLifecycleController {
             }
     }
 
+    /**
+     * SearchFragment 에서 발생하는 Ui Event 를 명시
+     */
     sealed interface SearchFragmentUiEventType {
+        /**
+         * SwipeRefresh 동작시
+         */
         object Refresh : SearchFragmentUiEventType
+
+        /**
+         * 검색어 변경시
+         *
+         * @param searchKeyword 변경된 키워드
+         */
         class Search(val searchKeyword: String) : SearchFragmentUiEventType
+
+        /**
+         * RecyclerView가 최하단에 도달했을 시
+         *
+         * @param page 요청할 페이지
+         */
         class EndScroll(val page: Int) : SearchFragmentUiEventType
     }
 }
