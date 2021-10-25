@@ -2,8 +2,8 @@
     <string name="app_name">KakaoSearchApp</string>
 
     <!--    Main Activity-->
-    <string name="main_tab_item_search">검색</string>
-    <string name="main_tab_item_store">저장됨</string>
+    <string name="main_tab_item_search">검색하기</string>
+    <string name="main_tab_item_store">내 보관함</string>
     <string name="main_input_hint">검색어를 입력해주세요.</string>
     <string name="main_empty_result">올바르지 않은 검색어 입니다</string>
     <string name="main_search_button_text">검색</string>
