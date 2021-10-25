@@ -25,8 +25,10 @@ import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
 import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
+import com.lyj.kakaosearchapp.presentation.activity.ProgressBarController
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -49,6 +51,9 @@ class SearchFragment : Fragment(), RxLifecycleController {
 
     private val viewModel: SearchViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
+    private val progressBarController: ProgressBarController? by lazy {
+        activity as? ProgressBarController
+    }
 
     private val searchKeywordChangeObserver: Flowable<String> by lazy {
         viewModel
@@ -92,17 +97,21 @@ class SearchFragment : Fragment(), RxLifecycleController {
                     .toFlowable(BackpressureStrategy.LATEST)
             )
             .flatMapSingle { event ->
-                Log.d("testTag","$event 여기 찍힘?")
                 when (event) {
                     is SearchFragmentUiEventType.EndScroll -> viewModel.requestKakaoSearchResult(
                         activityViewModel.latestSearchKeyword.value,
                         event.page
                     )
+                    is SearchFragmentUiEventType.Search -> viewModel.requestKakaoSearchResult(event.searchKeyword)
                     SearchFragmentUiEventType.Refresh -> viewModel
                         .requestKakaoSearchResult(activityViewModel.latestSearchKeyword.value)
                         .doOnSubscribe { binding.serachSwipeRefreshLayout.isRefreshing = false }
-                    is SearchFragmentUiEventType.Search -> viewModel.requestKakaoSearchResult(event.searchKeyword)
-                }.map { event to it }
+                }
+                    .map { event to it }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { progressBarController?.setProgressBarVisibility(View.VISIBLE) }
+                    .doOnSuccess { progressBarController?.setProgressBarVisibility(View.GONE) }
+                    .doOnError { progressBarController?.setProgressBarVisibility(View.GONE) }
             }
             .disposeByOnDestory(this)
 
@@ -115,7 +124,7 @@ class SearchFragment : Fragment(), RxLifecycleController {
             remoteDataObserver = uiEventToRequestObserver,
             storedDataObserver = storedDataChangeObserver,
             this
-        ){
+        ) {
             lifecycleScope.launch(Dispatchers.Main) {
                 requireContext().longToast(R.string.search_fragment_remote_date_empty)
             }

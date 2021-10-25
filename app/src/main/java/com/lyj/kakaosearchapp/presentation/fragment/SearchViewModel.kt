@@ -65,12 +65,13 @@ class SearchViewModel @Inject constructor(
                         latestKakaoSearchListModel.apply {
                             if (remoteData.isEmpty()){
                                 onRemoteResultEmpty()
+                                clear()
                                 return@apply
                             }
                             if (event !is SearchFragment.SearchFragmentUiEventType.EndScroll){
-                                clear()
+                                latestKakaoSearchListModel.clear()
                             }
-                            addAll(remoteData.map { model ->
+                            latestKakaoSearchListModel.addAll(remoteData.map { model ->
                                 KakaoSearchListModel(model, storedData[model.siteUrl] != null)
                             })
                         }

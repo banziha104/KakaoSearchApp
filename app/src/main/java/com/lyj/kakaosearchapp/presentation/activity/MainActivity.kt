@@ -1,7 +1,9 @@
 package com.lyj.kakaosearchapp.presentation.activity
 
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding4.view.clicks
@@ -19,7 +21,8 @@ import java.lang.NullPointerException
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), OnStoredDataControlErrorHandler, RxLifecycleController {
+class MainActivity : AppCompatActivity(), OnStoredDataControlErrorHandler, RxLifecycleController,
+    ProgressBarController {
 
     override val rxLifecycleObserver: RxLifecycleObserver = RxLifecycleObserver(this)
 
@@ -79,6 +82,14 @@ class MainActivity : AppCompatActivity(), OnStoredDataControlErrorHandler, RxLif
     override fun onError(throwable: Throwable) {
         longToast(if (throwable is NullPointerException) R.string.exception_url_is_null else R.string.exception_undeclared)
     }
+
+    override fun setProgressBarVisibility(visibility: Int){
+        binding.mainProgressBar.visibility = visibility
+    }
+}
+
+interface ProgressBarController {
+    fun setProgressBarVisibility(visibility: Int)
 }
 
 interface OnStoredDataControlErrorHandler {
