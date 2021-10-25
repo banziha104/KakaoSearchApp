@@ -1,14 +1,19 @@
 package com.lyj.kakaosearchapp.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.toPublisher
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.lyj.kakaosearchapp.R
+import com.lyj.kakaosearchapp.common.extension.android.longToast
 import com.lyj.kakaosearchapp.common.extension.android.observeEndScrollEvents
 import com.lyj.kakaosearchapp.common.extension.android.refreshObserver
 import com.lyj.kakaosearchapp.common.extension.lang.disposeByOnDestory
@@ -21,11 +26,12 @@ import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
 import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
-import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailItemEvent
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(), RxLifecycleController {
@@ -73,8 +79,9 @@ class SearchFragment : Fragment(), RxLifecycleController {
                         SearchFragmentUiEventType.Search(it)
                     },
                 binding.searchRecyclerView.observeEndScrollEvents(this)
-                    .map { 
-                        SearchFragmentUiEventType.EndScroll(++viewModel.page)
+                    .map {
+                        viewModel.page++
+                        SearchFragmentUiEventType.EndScroll(viewModel.page)
                     }
                     .toFlowable(BackpressureStrategy.LATEST),
                 binding.serachSwipeRefreshLayout.refreshObserver()
@@ -85,18 +92,16 @@ class SearchFragment : Fragment(), RxLifecycleController {
                     .toFlowable(BackpressureStrategy.LATEST)
             )
             .flatMapSingle { event ->
+                Log.d("testTag","$event 여기 찍힘?")
                 when (event) {
-                    is SearchFragmentUiEventType.EndScroll -> viewModel.requestKakaoSearchResultUseCase.execute(
+                    is SearchFragmentUiEventType.EndScroll -> viewModel.requestKakaoSearchResult(
                         activityViewModel.latestSearchKeyword.value,
                         event.page
                     )
-                    SearchFragmentUiEventType.Refresh -> viewModel.requestKakaoSearchResultUseCase.execute(
-                        activityViewModel.latestSearchKeyword.value
-                    )
+                    SearchFragmentUiEventType.Refresh -> viewModel
+                        .requestKakaoSearchResult(activityViewModel.latestSearchKeyword.value)
                         .doOnSubscribe { binding.serachSwipeRefreshLayout.isRefreshing = false }
-                    is SearchFragmentUiEventType.Search -> viewModel.requestKakaoSearchResultUseCase.execute(
-                        event.searchKeyword
-                    )
+                    is SearchFragmentUiEventType.Search -> viewModel.requestKakaoSearchResult(event.searchKeyword)
                 }.map { event to it }
             }
             .disposeByOnDestory(this)
@@ -110,7 +115,11 @@ class SearchFragment : Fragment(), RxLifecycleController {
             remoteDataObserver = uiEventToRequestObserver,
             storedDataObserver = storedDataChangeObserver,
             this
-        )
+        ){
+            lifecycleScope.launch(Dispatchers.Main) {
+                requireContext().longToast(R.string.search_fragment_remote_date_empty)
+            }
+        }
         ThumbnailAdapter(dataFlow, onClicked)
     }
 
@@ -134,6 +143,7 @@ class SearchFragment : Fragment(), RxLifecycleController {
             .apply {
                 adapter = searchThumbnailAdapter
                 layoutManager = GridLayoutManager(requireContext(), GRID_SPAN_COUNT)
+                (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
             }
     }
 

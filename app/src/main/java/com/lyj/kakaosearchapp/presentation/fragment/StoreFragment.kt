@@ -20,7 +20,6 @@ import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
 import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
-import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailItemEvent
 import io.reactivex.rxjava3.core.Flowable
 import kotlinx.coroutines.flow.map
 
@@ -40,13 +39,13 @@ class StoreFragment : Fragment(), RxLifecycleController {
     private val viewModel: StoreViewModel by viewModels()
     private val activityViewModel: MainViewModel by activityViewModels()
 
-    private val dataChangeObserver: Flowable<ThumbnailItemEvent> by lazy {
+    private val dataChangeObserver: Flowable<List<KakaoSearchListModel>> by lazy {
         viewModel.mapToKakaoSearchListModel(
             activityViewModel
                 .storedContents
                 .toPublisher(viewLifecycleOwner),
             this
-        ).map { ThumbnailItemEvent.Refesh(it) }
+        )
     }
 
     private val storedThumbnailAdapter: ThumbnailAdapter by lazy {

@@ -10,7 +10,11 @@
     <string name="main_search_button_text">검색</string>
 
     <!--    Network-->
-    <string name="network_not_reachable">"네트워크가 가용하지 않습니다. 네트워크 상태를 확인해주세요"</string>
+    <string name="network_not_reachable">네트워크가 가용하지 않습니다. 네트워크 상태를 확인해주세요</string>
+
+
+    <!--    Search Fragment-->
+    <string name="search_fragment_remote_date_empty">조회된 데이터가 없거나 모든 데이터를 불러왔습니다.</string>
 
     <!--    Exception-->
     <string name="exception_url_is_null">URL이 올바르지 않아, 데이터를 저장 혹은 삭제하는 데 실패하였습니다</string>

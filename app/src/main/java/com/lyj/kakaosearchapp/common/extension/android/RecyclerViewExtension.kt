@@ -9,4 +9,4 @@ fun RecyclerView.observeEndScrollEvents(lifecycleController: RxLifecycleControll
     this
         .scrollEvents()
         .disposeByOnDestory(lifecycleController)
-        .filter { !it.view.canScrollVertically(RecyclerView.VERTICAL) }
+        .filter { !it.view.canScrollVertically(RecyclerView.VERTICAL) && this.adapter?.itemCount ?: 0 != 0 }

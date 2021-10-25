@@ -1,5 +1,6 @@
 package com.lyj.kakaosearchapp.presentation.adapter.recycler
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 
 class ThumbnailAdapter(
-    private val dataObserver: Flowable<ThumbnailItemEvent>,
+    private val dataObserver: Flowable<List<KakaoSearchListModel>>,
     private val onClicked: (KakaoSearchModel) -> Unit
 ) : RecyclerView.Adapter<ThumbnailAdapter.ThumbnailViewHolder>() {
 
@@ -27,18 +28,14 @@ class ThumbnailAdapter(
     init {
         dataObserver
             .observeOn(Schedulers.computation())
-            .map { event ->
-                val newItems = when(event){
-                    is ThumbnailItemEvent.Add -> latestData + event.item
-                    is ThumbnailItemEvent.Refesh -> event.item
-                }
+            .map { newItems ->
                 val diffUtils = KakaoModelDiffUtils(latestData, newItems)
-                DiffUtil.calculateDiff(diffUtils) to newItems
+                DiffUtil.calculateDiff(diffUtils,false) to newItems
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { (diffResult, newItems) ->
-                diffResult.dispatchUpdatesTo(this)
                 latestData = newItems
+                diffResult.dispatchUpdatesTo(this)
             }
     }
 
@@ -96,11 +93,6 @@ class ThumbnailAdapter(
     }
 }
 
-sealed interface ThumbnailItemEvent{
-    val item : List<KakaoSearchListModel>
-    class Add(override val item: List<KakaoSearchListModel>) : ThumbnailItemEvent
-    class Refesh(override val item: List<KakaoSearchListModel>) : ThumbnailItemEvent
-}
 
 class KakaoModelDiffUtils(
     private val oldItems: List<KakaoSearchListModel>,
@@ -114,6 +106,7 @@ class KakaoModelDiffUtils(
         oldItems[oldItemPosition].siteUrl == newItems[newItemPosition].siteUrl
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition] == newItems[newItemPosition]
+
+        return oldItems[oldItemPosition] === newItems[newItemPosition]
     }
 }

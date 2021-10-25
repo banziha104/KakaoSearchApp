@@ -22,5 +22,4 @@ class StoreViewModel @Inject constructor() : ViewModel() {
                 map.values.map { KakaoSearchListModel(it, true) }
             }
             .disposeByOnDestory(lifecycleController)
-
 }
