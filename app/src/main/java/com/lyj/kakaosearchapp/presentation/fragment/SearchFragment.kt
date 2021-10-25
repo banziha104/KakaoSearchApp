@@ -21,7 +21,6 @@ import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
 import com.lyj.kakaosearchapp.common.rx.RxLifecycleObserver
 import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.databinding.SearchFragmentBinding
-import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
 import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
@@ -31,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -90,12 +88,24 @@ class SearchFragment : Fragment(), RxLifecycleController {
                     }
                     .toFlowable(BackpressureStrategy.LATEST),
                 binding.serachSwipeRefreshLayout.refreshObserver()
+                    .filter {
+                        (searchThumbnailAdapter.itemCount > 0).apply {
+                            if (!this) {
+                                binding.serachSwipeRefreshLayout.isRefreshing = false
+                            }
+                        }
+                    }
                     .map {
                         viewModel.page = KakaoSearchApi.DEFAULT_PAGE
                         SearchFragmentUiEventType.Refresh
                     }
                     .toFlowable(BackpressureStrategy.LATEST)
             )
+            .filter {
+                activityViewModel.latestSearchKeyword.value.isNotBlank().apply {
+                    if(!this) requireContext().longToast(R.string.main_empty_result)
+                }
+            }
             .flatMapSingle { event ->
                 when (event) {
                     is SearchFragmentUiEventType.EndScroll -> viewModel.requestKakaoSearchResult(

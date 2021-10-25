@@ -5,8 +5,7 @@
     <string name="main_tab_item_search">검색</string>
     <string name="main_tab_item_store">저장됨</string>
     <string name="main_input_hint">검색어를 입력해주세요.</string>
-    <string name="main_empty_result">조회된 유저가 없습니다.</string>
-    <string name="main_user_name_is_not_invalid">잘못된 유저이름입니다.</string>
+    <string name="main_empty_result">올바르지 않은 검색어 입니다</string>
     <string name="main_search_button_text">검색</string>
 
     <!--    Network-->
@@ -16,6 +15,8 @@
     <!--    Search Fragment-->
     <string name="search_fragment_remote_date_empty">조회된 데이터가 없거나 모든 데이터를 불러왔습니다.</string>
 
+    <!--    Store Fragment-->
+    <string name="store_fragment_empty_data">저장된 데이터가 없습니다.\n검색 후 이미지를 클릭해서 저장해주세요.</string>
     <!--    Exception-->
     <string name="exception_url_is_null">URL이 올바르지 않아, 데이터를 저장 혹은 삭제하는 데 실패하였습니다</string>
     <string name="exception_undeclared">예기치 않은 에러가 발생하였습니다</string>

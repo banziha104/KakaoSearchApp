@@ -59,6 +59,13 @@ class MainActivity : AppCompatActivity(), OnStoredDataControlErrorHandler, RxLif
             .merge()
             .disposeByOnDestory(this)
             .throttleFirst(500, TimeUnit.MILLISECONDS)
+            .filter {
+                (binding.mainInputEditText.text?.toString()?.isNotBlank() ?: false).apply {
+                    if (!this){
+                        longToast(R.string.main_empty_result)
+                    }
+                }
+            }
             .subscribe({
                 val text = binding.mainInputEditText.text?.toString()
                 if (text != null) {

@@ -45,7 +45,11 @@ class StoreFragment : Fragment(), RxLifecycleController {
                 .storedContents
                 .toPublisher(viewLifecycleOwner),
             this
-        )
+        ).map {
+            it.apply {
+                binding.textView.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     private val storedThumbnailAdapter: ThumbnailAdapter by lazy {
