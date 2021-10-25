@@ -9,6 +9,7 @@ import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
 import com.lyj.kakaosearchapp.common.util.DateUtils
 import com.lyj.kakaosearchapp.config.TestConfig
 import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
+import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.domain.usecase.RequestKakaoSearchResultUseCase
 import com.lyj.kakaosearchapp.extension.testWithAwait
@@ -18,6 +19,7 @@ import com.lyj.kakaosearchapp.mock.PublisherMock.Companion.mockModel
 import com.lyj.kakaosearchapp.module.ApiModule
 import com.lyj.kakaosearchapp.module.ApiTestModule
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
+import com.lyj.kakaosearchapp.presentation.fragment.SearchFragment
 import com.lyj.kakaosearchapp.presentation.fragment.SearchViewModel
 import dagger.hilt.android.testing.*
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -86,7 +88,7 @@ class SearchViewModelTests : ApiTestModule(), PublisherMock {
             .take(1)
             .testWithAwait(10)
             .assertValue {
-                it.isNotEmpty() && it.size == 6
+                it.isNotBlank()
             }
     }
 
@@ -106,14 +108,15 @@ class SearchViewModelTests : ApiTestModule(), PublisherMock {
 
     @Test
     fun `mapToKakaoSearchList_테스트`() {
+        viewModel.latestKakaoSearchListModel.add(KakaoSearchListModel(mockModel,false))
         viewModel
             .mapToKakaoSearchList(
-                Flowable.just(listOf(mockModel)),
+                Flowable.just(SearchFragment.SearchFragmentUiEventType.Search(TestConfig.SEARCH_KEYWORD) to listOf(mockModel)),
                 Flowable.just(mutableMapOf(mockModel.siteUrl!! to mockModel)),
                 lifecycleMock.activity
-            )
+            ){}
             .take(1)
-            .testWithAwait(5)
+            .testWithAwait(10)
             .assertValue { list ->
                 list.any { it.isStored }
             }

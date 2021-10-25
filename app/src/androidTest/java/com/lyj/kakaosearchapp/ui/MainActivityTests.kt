@@ -161,8 +161,6 @@ class MainActivityTests : MainActivityBaseTests(){
             .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.SEARCH.ordinal))
 
 //        * 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
-//        * 12. 하단으로 이동해 무한 스크롤 확인
-//        * 13. 상단으로 이동해 Refresh 되는지 확인
         searchRecyclerViewInteraction
             .check(
                 matches(
