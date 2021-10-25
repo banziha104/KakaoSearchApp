@@ -34,7 +34,7 @@ class ThumbnailAdapter(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { (diffResult, newItems) ->
-                latestData = newItems
+                latestData = newItems.toList()
                 diffResult.dispatchUpdatesTo(this)
             }
     }
@@ -94,6 +94,7 @@ class ThumbnailAdapter(
 }
 
 
+
 class KakaoModelDiffUtils(
     private val oldItems: List<KakaoSearchListModel>,
     private val newItems: List<KakaoSearchListModel>
@@ -107,6 +108,6 @@ class KakaoModelDiffUtils(
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
 
-        return oldItems[oldItemPosition] === newItems[newItemPosition]
+        return oldItems[oldItemPosition] == newItems[newItemPosition]
     }
 }
