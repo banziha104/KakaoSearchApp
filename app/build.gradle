@@ -6,9 +6,6 @@ plugins {
     id 'org.jetbrains.dokka'
 }
 
-def properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 android {
     compileSdk 31
 
@@ -19,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "KAKAO_API_KEY", properties['kakao.api.key']
+        buildConfigField "String", "KAKAO_API_KEY", kakaoApiKey
 
         testInstrumentationRunner "com.lyj.kakaosearchapp.CustomUiTestRunner"
     }
