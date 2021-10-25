@@ -1,7 +1,6 @@
 package com.lyj.kakaosearchapp.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,7 @@ import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.databinding.SearchFragmentBinding
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
-import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
+import com.lyj.kakaosearchapp.presentation.activity.StoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.activity.ProgressBarController
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -73,6 +72,17 @@ class SearchFragment : Fragment(), RxLifecycleController {
             )
     }
 
+    private val swipeRefreshObserver by lazy {
+        binding.serachSwipeRefreshLayout.refreshObserver()
+            .filter {
+                (searchThumbnailAdapter.itemCount > 0).apply {
+                    if (!this) {
+                        binding.serachSwipeRefreshLayout.isRefreshing = false
+                    }
+                }
+            }
+            .toFlowable(BackpressureStrategy.LATEST)
+    }
     private val uiEventToRequestObserver: Flowable<Pair<SearchFragmentUiEventType, List<KakaoSearchModel>>> by lazy {
         Flowable
             .merge<SearchFragmentUiEventType>(
@@ -85,21 +95,12 @@ class SearchFragment : Fragment(), RxLifecycleController {
                     .map {
                         viewModel.page++
                         SearchFragmentUiEventType.EndScroll(viewModel.page)
-                    }
-                    .toFlowable(BackpressureStrategy.LATEST),
-                binding.serachSwipeRefreshLayout.refreshObserver()
-                    .filter {
-                        (searchThumbnailAdapter.itemCount > 0).apply {
-                            if (!this) {
-                                binding.serachSwipeRefreshLayout.isRefreshing = false
-                            }
-                        }
-                    }
+                    },
+                swipeRefreshObserver
                     .map {
                         viewModel.page = KakaoSearchApi.DEFAULT_PAGE
                         SearchFragmentUiEventType.Refresh
                     }
-                    .toFlowable(BackpressureStrategy.LATEST)
             )
             .filter {
                 activityViewModel.latestSearchKeyword.value.isNotBlank().apply {
@@ -117,18 +118,18 @@ class SearchFragment : Fragment(), RxLifecycleController {
                         .requestKakaoSearchResult(activityViewModel.latestSearchKeyword.value)
                         .doOnSubscribe { binding.serachSwipeRefreshLayout.isRefreshing = false }
                 }
-                    .map { event to it }
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { progressBarController?.setProgressBarVisibility(View.VISIBLE) }
                     .doOnSuccess { progressBarController?.setProgressBarVisibility(View.GONE) }
                     .doOnError { progressBarController?.setProgressBarVisibility(View.GONE) }
+                    .map { event to it }
             }
             .disposeByOnDestory(this)
 
     }
 
     private val searchThumbnailAdapter: ThumbnailAdapter by lazy {
-        val handler = (activity as? OnStoredDataControlErrorHandler) ?: throw NotImplementedError()
+        val handler = (activity as? StoredDataControlErrorHandler) ?: throw NotImplementedError()
         val onClicked = activityViewModel.insertOrDeleteIfExists(handler::onError)
         val dataFlow = viewModel.mapToKakaoSearchList(
             remoteDataObserver = uiEventToRequestObserver,

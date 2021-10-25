@@ -9,19 +9,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lyj.kakaosearchapp.R
-import com.lyj.kakaosearchapp.common.extension.android.refreshObserver
-import com.lyj.kakaosearchapp.common.extension.lang.disposeByOnDestory
 import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
 import com.lyj.kakaosearchapp.common.rx.RxLifecycleObserver
-import com.lyj.kakaosearchapp.databinding.SearchFragmentBinding
 import com.lyj.kakaosearchapp.databinding.StoreFragmentBinding
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
-import com.lyj.kakaosearchapp.presentation.activity.OnStoredDataControlErrorHandler
+import com.lyj.kakaosearchapp.presentation.activity.StoredDataControlErrorHandler
 import com.lyj.kakaosearchapp.presentation.adapter.recycler.ThumbnailAdapter
 import io.reactivex.rxjava3.core.Flowable
-import kotlinx.coroutines.flow.map
 
 class StoreFragment : Fragment(), RxLifecycleController {
 
@@ -53,7 +48,7 @@ class StoreFragment : Fragment(), RxLifecycleController {
     }
 
     private val storedThumbnailAdapter: ThumbnailAdapter by lazy {
-        val handler = (activity as? OnStoredDataControlErrorHandler) ?: throw NotImplementedError()
+        val handler = (activity as? StoredDataControlErrorHandler) ?: throw NotImplementedError()
         val onClicked = activityViewModel.insertOrDeleteIfExists(handler::onError)
         ThumbnailAdapter(dataChangeObserver, onClicked)
     }
