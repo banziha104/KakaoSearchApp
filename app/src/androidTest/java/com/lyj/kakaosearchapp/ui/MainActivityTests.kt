@@ -10,16 +10,13 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.jakewharton.rxbinding4.internal.checkMainThread
 import com.lyj.kakaosearchapp.R
 import com.lyj.kakaosearchapp.action.CustomRecyclerViewAction
 import com.lyj.kakaosearchapp.action.CustomTableLayoutAction
 import com.lyj.kakaosearchapp.presentation.activity.MainActivity
-import com.lyj.kakaosearchapp.action.CustomViewAction
 import com.lyj.kakaosearchapp.config.ConstConfig
 import com.lyj.kakaosearchapp.matcher.CustomRecyclerViewMatcher
-import com.lyj.kakaosearchapp.presentation.activity.MainTabsType
-import com.lyj.kakaosearchapp.ui.base.BaseUiTests
+import com.lyj.kakaosearchapp.presentation.activity.MainTabType
 import com.lyj.kakaosearchapp.ui.base.MainActivityBaseTests
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -73,7 +70,7 @@ class MainActivityTests : MainActivityBaseTests(){
 
         // 2. TabLayout 테스트
         // 2-1 TabLayout에서 Store 버튼 클릭 후 StoreFragments 가 Visible 인지 확인
-        tabLayoutInteraction.perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.STORE.ordinal))
+        tabLayoutInteraction.perform(CustomTableLayoutAction.selectTabAtPosition(MainTabType.STORE.ordinal))
 
         await(500)
 
@@ -81,7 +78,7 @@ class MainActivityTests : MainActivityBaseTests(){
 
 
         // 2-2 TabLayout에서 Search 버튼 클릭 후 SearchFragments 가 Visible 인지 확인
-        tabLayoutInteraction.perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.SEARCH.ordinal))
+        tabLayoutInteraction.perform(CustomTableLayoutAction.selectTabAtPosition(MainTabType.SEARCH.ordinal))
 
         await(500)
 
@@ -141,7 +138,7 @@ class MainActivityTests : MainActivityBaseTests(){
 
         // 8. StoreFragment로 넘어가 방금 클릭한 아이템이 들어왔는지 확인
         tabLayoutInteraction
-            .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.STORE.ordinal))
+            .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabType.STORE.ordinal))
 
         await(1000)
 
@@ -158,7 +155,7 @@ class MainActivityTests : MainActivityBaseTests(){
 
         // 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
         tabLayoutInteraction
-            .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabsType.SEARCH.ordinal))
+            .perform(CustomTableLayoutAction.selectTabAtPosition(MainTabType.SEARCH.ordinal))
 
 //        * 11. SearchFragement로 돌아와 '저장되었음' 이미지가 아닌지 확인
         searchRecyclerViewInteraction
