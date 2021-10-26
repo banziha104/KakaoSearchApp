@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import java.lang.Exception
 
 
 // RecyclerView 관련 Custom Matcher를 모아둔 객체

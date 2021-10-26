@@ -3,13 +3,9 @@ package com.lyj.kakaosearchapp.data.source
 import com.lyj.kakaosearchapp.config.TestConfig
 import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.extension.testWithAwait
-import com.lyj.kakaosearchapp.module.ApiModule
-import com.lyj.kakaosearchapp.module.ApiTestModule
-
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import dagger.hilt.android.testing.UninstallModules
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Rule

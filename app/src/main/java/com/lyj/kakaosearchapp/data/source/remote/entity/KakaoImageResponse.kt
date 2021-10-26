@@ -2,8 +2,6 @@ package com.lyj.kakaosearchapp.data.source.remote.entity
 
 import com.google.gson.annotations.SerializedName
 import com.lyj.kakaosearchapp.domain.model.KakaoImageModel
-import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
-import com.lyj.kakaosearchapp.domain.model.KakaoVClipModel
 import java.util.*
 
 /**

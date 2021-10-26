@@ -13,9 +13,9 @@ import androidx.test.filters.LargeTest
 import com.lyj.kakaosearchapp.R
 import com.lyj.kakaosearchapp.action.CustomRecyclerViewAction
 import com.lyj.kakaosearchapp.action.CustomTableLayoutAction
-import com.lyj.kakaosearchapp.presentation.activity.MainActivity
 import com.lyj.kakaosearchapp.config.ConstConfig
 import com.lyj.kakaosearchapp.matcher.CustomRecyclerViewMatcher
+import com.lyj.kakaosearchapp.presentation.activity.MainActivity
 import com.lyj.kakaosearchapp.presentation.activity.MainTabType
 import com.lyj.kakaosearchapp.ui.base.MainActivityBaseTests
 import dagger.hilt.android.testing.HiltAndroidRule

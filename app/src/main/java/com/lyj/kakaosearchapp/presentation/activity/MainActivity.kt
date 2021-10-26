@@ -1,8 +1,8 @@
 package com.lyj.kakaosearchapp.presentation.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding4.view.clicks
 import com.lyj.kakaosearchapp.R

@@ -1,6 +1,5 @@
 package com.lyj.kakaosearchapp.common.util
 
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 

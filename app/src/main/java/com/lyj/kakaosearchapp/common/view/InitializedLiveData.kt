@@ -1,6 +1,6 @@
 package com.lyj.kakaosearchapp.common.view
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
 
 
 /**

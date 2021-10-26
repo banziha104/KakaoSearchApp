@@ -1,13 +1,12 @@
 package com.lyj.kakaosearchapp.data.source.remote.service
 
 import com.google.gson.annotations.SerializedName
-import com.lyj.kakaosearchapp.BuildConfig
 import com.lyj.kakaosearchapp.data.source.remote.entity.KakaoImageResponse
 import com.lyj.kakaosearchapp.data.source.remote.entity.KakaoVClipResponse
+import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi.Sort.ACCURACY
+import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi.Sort.RECENCY
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Query
 
 

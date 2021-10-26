@@ -2,15 +2,9 @@ package com.lyj.kakaosearchapp.mock
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import org.mockito.kotlin.mock
-import androidx.appcompat.app.AppCompatActivity
 import com.lyj.kakaosearchapp.presentation.activity.MainActivity
-
 import org.robolectric.Robolectric
-
 import org.robolectric.android.controller.ActivityController
-
-
 
 
 class LifecycleMock {

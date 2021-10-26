@@ -1,16 +1,8 @@
 package com.lyj.kakaosearchapp.presentaion.viewmodel
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.toPublisher
-import com.lyj.kakaosearchapp.common.extension.lang.disposeByOnDestory
-import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
-import com.lyj.kakaosearchapp.common.util.DateUtils
 import com.lyj.kakaosearchapp.config.TestConfig
 import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
-import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.domain.usecase.RequestKakaoSearchResultUseCase
 import com.lyj.kakaosearchapp.extension.testWithAwait
 import com.lyj.kakaosearchapp.mock.LifecycleMock
@@ -18,31 +10,19 @@ import com.lyj.kakaosearchapp.mock.PublisherMock
 import com.lyj.kakaosearchapp.mock.PublisherMock.Companion.mockModel
 import com.lyj.kakaosearchapp.module.ApiModule
 import com.lyj.kakaosearchapp.module.ApiTestModule
-import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
 import com.lyj.kakaosearchapp.presentation.fragment.SearchFragment
 import com.lyj.kakaosearchapp.presentation.fragment.SearchViewModel
 import dagger.hilt.android.testing.*
-import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import io.reactivex.rxjava3.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.reactivestreams.Publisher
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.time.TimeMark
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)

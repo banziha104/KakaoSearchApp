@@ -1,6 +1,6 @@
 package com.lyj.kakaosearchapp.domain.model
 
-import java.util.Date
+import java.util.*
 
 /**
  * Presenation Layer 에서 사용할 Model 객체

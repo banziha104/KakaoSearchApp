@@ -1,9 +1,7 @@
 package com.lyj.kakaosearchapp.presentaion.viewmodel
 
 
-import com.lyj.kakaosearchapp.common.util.DateUtils
 import com.lyj.kakaosearchapp.config.TestConfig
-import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.mock.PublisherMock
 import com.lyj.kakaosearchapp.mock.PublisherMock.Companion.mockModel
 import com.lyj.kakaosearchapp.presentation.activity.MainViewModel
@@ -14,11 +12,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.*
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)

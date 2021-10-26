@@ -10,9 +10,6 @@ import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.presentation.fragment.SearchFragment
 import com.lyj.kakaosearchapp.presentation.fragment.StoreFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.lang.Exception
-import java.lang.IndexOutOfBoundsException
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 @HiltViewModel

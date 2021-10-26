@@ -1,7 +1,6 @@
 package com.lyj.kakaosearchapp.presentation.fragment
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.toPublisher
 import com.lyj.kakaosearchapp.common.extension.lang.disposeByOnDestory
 import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel

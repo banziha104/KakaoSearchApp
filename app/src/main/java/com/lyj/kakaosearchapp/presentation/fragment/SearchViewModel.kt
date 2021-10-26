@@ -1,6 +1,5 @@
 package com.lyj.kakaosearchapp.presentation.fragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.lyj.kakaosearchapp.common.extension.lang.disposeByOnDestory
 import com.lyj.kakaosearchapp.common.rx.RxLifecycleController
@@ -8,7 +7,6 @@ import com.lyj.kakaosearchapp.data.source.remote.service.KakaoSearchApi
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchListModel
 import com.lyj.kakaosearchapp.domain.model.KakaoSearchModel
 import com.lyj.kakaosearchapp.domain.usecase.RequestKakaoSearchResultUseCase
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
