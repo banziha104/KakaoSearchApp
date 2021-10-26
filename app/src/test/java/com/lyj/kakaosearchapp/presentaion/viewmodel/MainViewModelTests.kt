@@ -38,10 +38,9 @@ class MainViewModelTests : PublisherMock {
 
     @Test
     fun `실행테스트`(){
-        val insertOrDelete = viewModel.insertOrDeleteIfExists {  }
-        insertOrDelete(mockModel)
+        viewModel.insertOrDeleteIfExists(mockModel)
         assert(viewModel.storedContents.value[mockModel.siteUrl] != null)
-        insertOrDelete(mockModel)
+        viewModel.insertOrDeleteIfExists(mockModel)
         assert(viewModel.storedContents.value[mockModel.siteUrl] == null)
     }
 }
